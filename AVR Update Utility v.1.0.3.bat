@@ -8,6 +8,11 @@ set KAV_TARGET_PATH=C:\TEMP\KAVShare\Updates
 set DWEB_INIT_PATH=E:\DWEB_Repo
 set DWEB_TARGET_PATH=C:\TEMP\DWEB_Repo
 set DWEB_UTIL_PATH=C:\Program Files\DrWeb Server\bin\drwcsd.exe
+set DWEB_BASES_URL=http://www2.portal.cbr.ru/avir_bases/drweb/11.00/es11_fstek2019dec/update/es1100_repository_fstek2019dec.zip
+set DWEB_BASES_TARGET_PATH=C:\TEMP\DWEB_Repo\es1100_repository_fstek2019dec.zip
+set DWEB_REPO_URL=
+set DWEB_REPO_TARGET_PATH=
+
 
 ::Блок старта программы START
 :QuestStartProg
@@ -33,10 +38,12 @@ if %QUEST_START_PROG%==ka GOTO QuestCopyKAV
 if %QUEST_START_PROG%==Ka GOTO QuestCopyKAV
 if %QUEST_START_PROG%==kA GOTO QuestCopyKAV
 if %QUEST_START_PROG%==KA GOTO QuestCopyKAV
+
 if %QUEST_START_PROG%==dw GOTO QuestDWEB
 if %QUEST_START_PROG%==Dw GOTO QuestDWEB
 if %QUEST_START_PROG%==dW GOTO QuestDWEB
 if %QUEST_START_PROG%==DW GOTO QuestDWEB
+
 if %QUEST_START_PROG%==x GOTO Quit
 if %QUEST_START_PROG%==X GOTO Quit
 echo.
@@ -97,22 +104,37 @@ echo ------------------
 echo Выберите операцию:
 echo ------------------
 echo.
+echo [ lb ] для cкачивания антивирусных баз Dr.Web
+echo [ lr ] для cкачивания антивирусных баз Dr.Web
 echo [ cp ] Копировать репозиторий с флешки в рабочую директорию
 echo [ re ] Восстановить репозиторий из рабочей директории на сервере Dr.Web
 echo [ n ]  Назад
 echo [ x ]  Выйти из программы
 echo.
 set /p QUEST_DWEB=">"
+if %QUEST_START_PROG%==lb GOTO QuestLoadDWEBBases
+if %QUEST_START_PROG%==Lb GOTO QuestLoadDWEBBases
+if %QUEST_START_PROG%==lB GOTO QuestLoadDWEBBases
+if %QUEST_START_PROG%==LB GOTO QuestLoadDWEBBases
+
+if %QUEST_START_PROG%==lr GOTO QuestLoadDWEBRepo
+if %QUEST_START_PROG%==Lr GOTO QuestLoadDWEBRepo
+if %QUEST_START_PROG%==lR GOTO QuestLoadDWEBRepo
+if %QUEST_START_PROG%==LR GOTO QuestLoadDWEBRepo
+
 if %QUEST_DWEB%==cp GOTO PerformCopyDWEB
 if %QUEST_DWEB%==Cp GOTO PerformCopyDWEB
 if %QUEST_DWEB%==cP GOTO PerformCopyDWEB
 if %QUEST_DWEB%==CP GOTO PerformCopyDWEB
+
 if %QUEST_DWEB%==re GOTO PerformRestoreDWEB
 if %QUEST_DWEB%==Re GOTO PerformRestoreDWEB
 if %QUEST_DWEB%==rE GOTO PerformRestoreDWEB
 if %QUEST_DWEB%==RE GOTO PerformRestoreDWEB
+
 if %QUEST_DWEB%==n GOTO QuestStartProg
 if %QUEST_DWEB%==N GOTO QuestStartProg
+
 if %QUEST_DWEB%==x GOTO Quit
 if %QUEST_DWEB%==X GOTO Quit
 echo.
@@ -122,6 +144,12 @@ echo -------------------------
 echo.
 pause
 GOTO QuestDWEB
+
+:QuestLoadDWEBBases
+curl -o "%DWEB_BASES_TARGET_PATH%" "%DWEB_BASES_URL%"
+
+:QuestLoadDWEBRepo
+rem ...
 
 :PerformCopyDWEB
 if not exist "%DWEB_INIT_PATH%\*repository*.zip" GOTO ErrNoFileCopyDWEB ::Проверка наличия файлов

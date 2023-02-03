@@ -76,20 +76,20 @@ echo.
 echo Введите:
 echo.
 echo [ y ] Да
+echo [ n ] Назад
 echo.
 echo ------------------------
-echo [ n ] Назад
 echo [ x ] Выйти из программы
 echo.
 set /p QUEST_COPY_KAV=">"
-if %QUEST_COPY_KAV%==y GOTO PerformCopyKAV
-if %QUEST_COPY_KAV%==Y GOTO PerformCopyKAV
+if %QUEST_COPY_KAV%==y GOTO CopyKAV
+if %QUEST_COPY_KAV%==Y GOTO CopyKAV
 if %QUEST_COPY_KAV%==n GOTO QuestStartProg
 if %QUEST_COPY_KAV%==N GOTO QuestStartProg
 if %QUEST_COPY_KAV%==x GOTO Quit
 if %QUEST_COPY_KAV%==X GOTO Quit
 echo.
-:PerformCopyKAV
+:CopyKAV
 if not exist "%KAV_INIT_DIR%\*" GOTO ErrNoFileCopyKAV ::Проверка наличия файлов
 cls
 rd %KAV_TARGET_DIR% /s /q
@@ -173,6 +173,7 @@ pause
 GOTO QuestDWEB
 
 :DownloadDWEBBases
+cls
 if exist %DWEB_BASES_TARGET_DIR% (rd %DWEB_BASES_TARGET_DIR% /s /q)
 if not exist %DWEB_BASES_TARGET_DIR% (md %DWEB_BASES_TARGET_DIR%)
 echo.
@@ -186,6 +187,7 @@ pause
 GOTO QuestDWEB
 
 :UnzipDWEBBases
+cls
 echo.
 echo --------------------------------------------------
 echo Начинается распаковка архива, пожалуйста, ждите...
@@ -200,6 +202,7 @@ pause
 GOTO QuestDWEB
 
 :DownloadDWEBRepo
+cls
 if exist %DWEB_REPO_TARGET_DIR% (rd %DWEB_REPO_TARGET_DIR% /s /q)
 if not exist %DWEB_REPO_TARGET_DIR% (md %DWEB_REPO_TARGET_DIR%)
 echo.
@@ -212,11 +215,8 @@ echo.
 pause
 GOTO QuestDWEB
 
-:CopyBasesDWEB
-rem ...
-rem Написать проверку на наличие директории и создать ее если ее нет
-
 :CopyRepoDWEB
+cls
 if not exist "%DWEB_INIT_DIR%\*repository*.zip" GOTO ErrNoFileCopyDWEB ::Проверка наличия файлов
 echo.
 echo --------------------------------------------------------
@@ -231,6 +231,7 @@ pause
 GOTO QuestDWEB
 
 :RestoreDWEB
+cls
 if not exist "%DWEB_TARGET_DIR%\*repository*.zip" GOTO ErrNoFileRestoreDWEB ::Проверка наличия файлов
 if not exist "%DWEB_UTIL_DIR%" GOTO ErrNoUtilFileDWEB ::Проверка наличия файлов
 echo.

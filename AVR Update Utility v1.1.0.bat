@@ -3,6 +3,7 @@
 
 chcp 1251 > NUL
 
+::Блок переменных START
 set KAV_INIT_DIR=E:\Updates
 set KAV_TARGET_DIR=C:\TEMP\KAVShare\Updates
 set DWEB_INIT_DIR=E:\DWEB_Repo
@@ -14,8 +15,8 @@ set DWEB_BASES_TARGET_DIR=C:\TEMP\DWEB_Cumul
 set DWEB_REPO_TARGET_DIR=C:\TEMP\DWEB_Repo
 set DWEB_BASES_TARGET_FILE=%DWEB_BASES_TARGET_DIR%\es1100_cumul_fstek2019dec.zip
 set DWEB_REPO_TARGET_FILE=%DWEB_REPO_TARGET_DIR%\es1100_repository_fstek2019dec.zip
-
-
+set WINRAR_WORK_FILE=C:\Program Files (x86)\WinRAR\WinRAR.exe
+::Блок переменных END
 
 ::Блок старта программы START
 :QuestStartProg
@@ -75,9 +76,9 @@ echo.
 echo Введите:
 echo.
 echo [ y ] Да
-echo [ n ] Назад
 echo.
 echo ------------------------
+echo [ n ] Назад
 echo [ x ] Выйти из программы
 echo.
 set /p QUEST_COPY_KAV=">"
@@ -111,43 +112,52 @@ echo ------------------
 echo Выберите операцию:
 echo ------------------
 echo.
+echo Работа с антивирусными базами Dr.Web:
+echo.
 echo [ lb ] Скачать антивирусные базы Dr.Web
-rem echo [ ub ] Разархивировать скаченные антивирусные базы Dr.Web
+echo [ ub ] Разархивировать скаченные антивирусные базы Dr.Web и удалить файл архива
+echo [ cb ] Копировать антивирусные базы Dr.Web с флешки в директорию–источник
+echo.
+echo Работа с репозиторием Dr.Web:
+echo.
 echo [ lr ] Скачать репозиторий Dr.Web
-rem echo [ ur ] Разархивировать скаченный репозиторий базы Dr.Web
-echo [ cb ] Копировать антивирусные базы с флешки в рабочую директорию
-echo [ cr ] Копировать репозиторий с флешки в рабочую директорию
-echo [ re ] Восстановить репозиторий из рабочей директории на сервере Dr.Web
-echo [ n ]  Назад
+echo [ cr ] Копировать репозиторий Dr.Web с флешки в директорию–источник
+echo [ re ] Восстановить репозиторий из директории–источника на сервере Dr.Web
 echo.
 echo -------------------------
+echo [ n ]  Назад
 echo [ x ]  Выйти из программы
 echo.
 set /p QUEST_DWEB=">"
-if %QUEST_DWEB%==lb GOTO QuestLoadDWEBBases
-if %QUEST_DWEB%==Lb GOTO QuestLoadDWEBBases
-if %QUEST_DWEB%==lB GOTO QuestLoadDWEBBases
-if %QUEST_DWEB%==LB GOTO QuestLoadDWEBBases
+if %QUEST_DWEB%==lb GOTO DownloadDWEBBases
+if %QUEST_DWEB%==Lb GOTO DownloadDWEBBases
+if %QUEST_DWEB%==lB GOTO DownloadDWEBBases
+if %QUEST_DWEB%==LB GOTO DownloadDWEBBases
 
-if %QUEST_DWEB%==lr GOTO QuestLoadDWEBRepo
-if %QUEST_DWEB%==Lr GOTO QuestLoadDWEBRepo
-if %QUEST_DWEB%==lR GOTO QuestLoadDWEBRepo
-if %QUEST_DWEB%==LR GOTO QuestLoadDWEBRepo
+if %QUEST_DWEB%==ub GOTO UnzipDWEBBases
+if %QUEST_DWEB%==Ub GOTO UnzipDWEBBases
+if %QUEST_DWEB%==uB GOTO UnzipDWEBBases
+if %QUEST_DWEB%==UB GOTO UnzipDWEBBases
 
-if %QUEST_DWEB%==cb GOTO PerformCopyBasesDWEB
-if %QUEST_DWEB%==Cb GOTO PerformCopyBasesDWEB
-if %QUEST_DWEB%==cB GOTO PerformCopyBasesDWEB
-if %QUEST_DWEB%==CB GOTO PerformCopyBasesDWEB
+if %QUEST_DWEB%==lr GOTO DownloadDWEBRepo
+if %QUEST_DWEB%==Lr GOTO DownloadDWEBRepo
+if %QUEST_DWEB%==lR GOTO DownloadDWEBRepo
+if %QUEST_DWEB%==LR GOTO DownloadDWEBRepo
 
-if %QUEST_DWEB%==cr GOTO PerformCopyRepoDWEB
-if %QUEST_DWEB%==Cr GOTO PerformCopyRepoDWEB
-if %QUEST_DWEB%==cR GOTO PerformCopyRepoDWEB
-if %QUEST_DWEB%==CR GOTO PerformCopyRepoDWEB
+if %QUEST_DWEB%==cb GOTO CopyBasesDWEB
+if %QUEST_DWEB%==Cb GOTO CopyBasesDWEB
+if %QUEST_DWEB%==cB GOTO CopyBasesDWEB
+if %QUEST_DWEB%==CB GOTO CopyBasesDWEB
 
-if %QUEST_DWEB%==re GOTO PerformRestoreDWEB
-if %QUEST_DWEB%==Re GOTO PerformRestoreDWEB
-if %QUEST_DWEB%==rE GOTO PerformRestoreDWEB
-if %QUEST_DWEB%==RE GOTO PerformRestoreDWEB
+if %QUEST_DWEB%==cr GOTO CopyRepoDWEB
+if %QUEST_DWEB%==Cr GOTO CopyRepoDWEB
+if %QUEST_DWEB%==cR GOTO CopyRepoDWEB
+if %QUEST_DWEB%==CR GOTO CopyRepoDWEB
+
+if %QUEST_DWEB%==re GOTO RestoreDWEB
+if %QUEST_DWEB%==Re GOTO RestoreDWEB
+if %QUEST_DWEB%==rE GOTO RestoreDWEB
+if %QUEST_DWEB%==RE GOTO RestoreDWEB
 
 if %QUEST_DWEB%==n GOTO QuestStartProg
 if %QUEST_DWEB%==N GOTO QuestStartProg
@@ -162,8 +172,8 @@ echo.
 pause
 GOTO QuestDWEB
 
-:QuestLoadDWEBBases
-rd %DWEB_BASES_TARGET_DIR% /s /q
+:DownloadDWEBBases
+if exist %DWEB_BASES_TARGET_DIR% (rd %DWEB_BASES_TARGET_DIR% /s /q)
 if not exist %DWEB_BASES_TARGET_DIR% (md %DWEB_BASES_TARGET_DIR%)
 echo.
 echo -------------------------------------------
@@ -175,8 +185,22 @@ echo.
 pause
 GOTO QuestDWEB
 
-:QuestLoadDWEBRepo
-rd %DWEB_REPO_TARGET_DIR% /s /q
+:UnzipDWEBBases
+echo.
+echo --------------------------------------------------
+echo Начинается распаковка архива, пожалуйста, ждите...
+echo --------------------------------------------------
+echo.
+"%WINRAR_WORK_FILE%" x %DWEB_BASES_TARGET_FILE% %DWEB_BASES_TARGET_DIR%
+rem "%WINRAR_WORK_FILE%" x -ibck %DWEB_BASES_TARGET_FILE% %DWEB_BASES_TARGET_DIR%
+rem Ключь -ibck перемещает окно прогресса в трей
+del /q %DWEB_BASES_TARGET_FILE%
+echo.
+pause
+GOTO QuestDWEB
+
+:DownloadDWEBRepo
+if exist %DWEB_REPO_TARGET_DIR% (rd %DWEB_REPO_TARGET_DIR% /s /q)
 if not exist %DWEB_REPO_TARGET_DIR% (md %DWEB_REPO_TARGET_DIR%)
 echo.
 echo -------------------------------------------
@@ -188,11 +212,11 @@ echo.
 pause
 GOTO QuestDWEB
 
-:PerformCopyBasesDWEB
+:CopyBasesDWEB
 rem ...
 rem Написать проверку на наличие директории и создать ее если ее нет
 
-:PerformCopyRepoDWEB
+:CopyRepoDWEB
 if not exist "%DWEB_INIT_DIR%\*repository*.zip" GOTO ErrNoFileCopyDWEB ::Проверка наличия файлов
 echo.
 echo --------------------------------------------------------
@@ -206,7 +230,7 @@ echo.
 pause
 GOTO QuestDWEB
 
-:PerformRestoreDWEB
+:RestoreDWEB
 if not exist "%DWEB_TARGET_DIR%\*repository*.zip" GOTO ErrNoFileRestoreDWEB ::Проверка наличия файлов
 if not exist "%DWEB_UTIL_DIR%" GOTO ErrNoUtilFileDWEB ::Проверка наличия файлов
 echo.

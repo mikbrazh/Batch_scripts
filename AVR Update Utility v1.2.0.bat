@@ -1,4 +1,4 @@
-::AVR Update Utility v1.1.0, Script by Mikhail Brazhnik, 02/2023
+::AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
 @ECHO OFF
 
 chcp 1251 > NUL
@@ -16,6 +16,7 @@ set DWEB_REPO_TARGET_DIR=C:\TEMP\DWEB_Repo
 set DWEB_BASES_TARGET_FILE=%DWEB_BASES_TARGET_DIR%\es1100_cumul_fstek2019dec.zip
 set DWEB_REPO_TARGET_FILE=%DWEB_REPO_TARGET_DIR%\es1100_repository_fstek2019dec.zip
 set WINRAR_WORK_FILE=C:\Program Files (x86)\WinRAR\WinRAR.exe
+set ZIP_ARCH_DIR=C:\DWEB_Cumul_%date%
 ::Блок переменных END
 
 ::Блок старта программы START
@@ -134,10 +135,10 @@ if %QUEST_DWEB%==Lb GOTO DownloadDWEBBases
 if %QUEST_DWEB%==lB GOTO DownloadDWEBBases
 if %QUEST_DWEB%==LB GOTO DownloadDWEBBases
 
-if %QUEST_DWEB%==ub GOTO UnzipDWEBBases
-if %QUEST_DWEB%==Ub GOTO UnzipDWEBBases
-if %QUEST_DWEB%==uB GOTO UnzipDWEBBases
-if %QUEST_DWEB%==UB GOTO UnzipDWEBBases
+if %QUEST_DWEB%==ub GOTO QuestUnzipDWEBBases
+if %QUEST_DWEB%==Ub GOTO QuestUnzipDWEBBases
+if %QUEST_DWEB%==uB GOTO QuestUnzipDWEBBases
+if %QUEST_DWEB%==UB GOTO QuestUnzipDWEBBases
 
 if %QUEST_DWEB%==lr GOTO DownloadDWEBRepo
 if %QUEST_DWEB%==Lr GOTO DownloadDWEBRepo
@@ -184,7 +185,35 @@ echo.
 curl -o "%DWEB_BASES_TARGET_FILE%" "%DWEB_BASES_URL%"
 echo.
 pause
-GOTO QuestDWEB
+GOTO QuestUnzipDWEBBases
+
+:QuestUnzipDWEBBases
+cls
+set QUEST_UNZIP_DWEB_BASES=NUL
+echo ----------------------------------------
+echo Распаковать архив и удалить файл архива?
+echo ----------------------------------------
+echo.
+echo Введите:
+echo.
+echo [ y ] Да
+echo [ n ] Нет
+echo.
+echo ------------------------
+echo [ x ] Выйти из программы
+echo.
+echo После ввода нажмите ENTER
+echo.
+set /p QUEST_UNZIP_DWEB_BASES=">"
+
+if %QUEST_UNZIP_DWEB_BASES%==y GOTO UnzipDWEBBases
+if %QUEST_UNZIP_DWEB_BASES%==Y GOTO UnzipDWEBBases
+if %QUEST_UNZIP_DWEB_BASES%==n GOTO QuestDWEB
+if %QUEST_UNZIP_DWEB_BASES%==N GOTO QuestDWEB
+if %QUEST_UNZIP_DWEB_BASES%==x GOTO Quit
+if %QUEST_UNZIP_DWEB_BASES%==X GOTO Quit
+
+GOTO UnzipDWEBBases
 
 :UnzipDWEBBases
 cls
@@ -196,8 +225,9 @@ echo.
 "%WINRAR_WORK_FILE%" x %DWEB_BASES_TARGET_FILE% %DWEB_BASES_TARGET_DIR%
 rem "%WINRAR_WORK_FILE%" x -ibck %DWEB_BASES_TARGET_FILE% %DWEB_BASES_TARGET_DIR%
 rem Ключь -ibck перемещает окно прогресса в трей
-del /q %DWEB_BASES_TARGET_FILE%
+if not exist %ZIP_ARCH_DIR% (md %ZIP_ARCH_DIR%)
 echo.
+move /y %DWEB_BASES_TARGET_FILE% %ZIP_ARCH_DIR%\
 pause
 GOTO QuestDWEB
 

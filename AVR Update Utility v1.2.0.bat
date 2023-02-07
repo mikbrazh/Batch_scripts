@@ -4,8 +4,12 @@
 chcp 1251 > NUL
 
 ::Блок переменных START
+:: KAV START
 set KAV_INIT_DIR=E:\Updates
 set KAV_TARGET_DIR=C:\TEMP\KAVShare\Updates
+:: KAV END
+
+:: DWEB START
 set DWEB_INIT_DIR=E:\DWEB_Repo
 set DWEB_TARGET_DIR=C:\TEMP\DWEB_Repo
 set DWEB_UTIL_DIR=C:\Program Files\DrWeb Server\bin\drwcsd.exe
@@ -15,15 +19,19 @@ set DWEB_BASES_TARGET_DIR=C:\TEMP\DWEB_Cumul
 set DWEB_REPO_TARGET_DIR=C:\TEMP\DWEB_Repo
 set DWEB_BASES_TARGET_FILE=%DWEB_BASES_TARGET_DIR%\es1100_cumul_fstek2019dec.zip
 set DWEB_REPO_TARGET_FILE=%DWEB_REPO_TARGET_DIR%\es1100_repository_fstek2019dec.zip
+:: DWEB END
+
+:: ZIP START
 set WINRAR_WORK_FILE=C:\Program Files (x86)\WinRAR\WinRAR.exe
 set ZIP_ARCH_DIR=C:\DWEB_Cumul_%date%
+:: ZIP END
 ::Блок переменных END
 
 ::Блок старта программы START
 :QuestStartProg
 cls
 echo.
-echo AVR Update Utility v1.1.0, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
 echo.
 set QUEST_START_PROG=NUL
 echo --------------------------------------------
@@ -68,7 +76,7 @@ echo.
 cls
 set QUEST_COPY_KAV=NUL
 echo.
-echo AVR Update Utility v1.1.0, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
 echo.
 echo -----------------------------------------------
 echo Cкопировать базы с флешки в рабочую директорию?
@@ -107,7 +115,7 @@ echo.
 cls
 set QUEST_DWEB=NUL
 echo.
-echo AVR Update Utility v1.1.0, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
 echo.
 echo ------------------
 echo Выберите операцию:
@@ -321,7 +329,7 @@ GOTO QuestDWEB
 :Quit
 cls
 echo.
-echo AVR Update Utility v1.1.0, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
 echo.
 echo ------------------------------------------------------
 echo Программа завершена. Для выхода нажмите любую клавишу.

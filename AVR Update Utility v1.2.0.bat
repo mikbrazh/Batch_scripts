@@ -4,12 +4,11 @@
 chcp 1251 > NUL
 
 ::Блок переменных START
-:: KAV START
+:: KAV
 set KAV_INIT_DIR=E:\Updates
 set KAV_TARGET_DIR=C:\TEMP\KAVShare\Updates
-:: KAV END
 
-:: DWEB START
+:: DWEB
 set DWEB_INIT_DIR=E:\DWEB_Repo
 set DWEB_TARGET_DIR=C:\TEMP\DWEB_Repo
 set DWEB_UTIL_DIR=C:\Program Files\DrWeb Server\bin\drwcsd.exe
@@ -19,12 +18,10 @@ set DWEB_BASES_TARGET_DIR=C:\TEMP\DWEB_Cumul
 set DWEB_REPO_TARGET_DIR=C:\TEMP\DWEB_Repo
 set DWEB_BASES_TARGET_FILE=%DWEB_BASES_TARGET_DIR%\es1100_cumul_fstek2019dec.zip
 set DWEB_REPO_TARGET_FILE=%DWEB_REPO_TARGET_DIR%\es1100_repository_fstek2019dec.zip
-:: DWEB END
 
-:: ZIP START
+:: ZIP
 set WINRAR_WORK_FILE=C:\Program Files (x86)\WinRAR\WinRAR.exe
 set ZIP_ARCH_DIR=C:\DWEB_Cumul_%date%
-:: ZIP END
 ::Блок переменных END
 
 ::Блок старта программы START

@@ -5,8 +5,10 @@ chcp 1251 > NUL
 
 ::Блок переменных START
 :: KAV
-set KAV_INIT_DIR=E:\Updates
-set KAV_TARGET_DIR=C:\TEMP\KAVShare\Updates
+set KAV_INIT_DIR_FLASH=E:\Updates
+set KAV_TARGET_DIR_DISK=C:\TEMP\KAVShare\Updates
+set KAV_INIT_DIR_DISK=C:\TEMP\Updates
+set KAV_TARGET_DIR_FLASH=E:\Updates
 
 :: DWEB
 set DWEB_INIT_DIR=E:\DWEB_Repo
@@ -46,10 +48,10 @@ echo.
 echo После ввода нажмите ENTER
 echo.
 set /p QUEST_START_PROG=">"
-if %QUEST_START_PROG%==ka GOTO QuestCopyKAV
-if %QUEST_START_PROG%==Ka GOTO QuestCopyKAV
-if %QUEST_START_PROG%==kA GOTO QuestCopyKAV
-if %QUEST_START_PROG%==KA GOTO QuestCopyKAV
+if %QUEST_START_PROG%==ka GOTO QuestKAV
+if %QUEST_START_PROG%==Ka GOTO QuestKAV
+if %QUEST_START_PROG%==kA GOTO QuestKAV
+if %QUEST_START_PROG%==KA GOTO QuestKAV
 
 if %QUEST_START_PROG%==dw GOTO QuestDWEB
 if %QUEST_START_PROG%==Dw GOTO QuestDWEB
@@ -69,9 +71,84 @@ GOTO QuestStartProg
 
 ::Блок работы с KAV START
 echo.
-:QuestCopyKAV
+:QuestKAV
 cls
-set QUEST_COPY_KAV=NUL
+set QUEST_KAV=NUL
+echo.
+echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
+echo.
+echo ------------------
+echo Выберите операцию:
+echo ------------------
+echo.
+echo Введите:
+echo.
+echo [ cf ] Скопировать базы на флешку
+echo [ cd ] Cкопировать базы с флешки в рабочую директорию
+echo.
+echo ------------------------
+echo [ n ] Назад
+echo [ x ] Выйти из программы
+echo.
+set /p QUEST_KAV=">"
+if %QUEST_KAV%==cf GOTO QuestCopyKAVtoFlash
+if %QUEST_KAV%==cF GOTO QuestCopyKAVtoFlash
+if %QUEST_KAV%==Cf GOTO QuestCopyKAVtoFlash
+if %QUEST_KAV%==CF GOTO QuestCopyKAVtoFlash
+
+if %QUEST_KAV%==cd GOTO QuestCopyKAVtoDisk
+if %QUEST_KAV%==cD GOTO QuestCopyKAVtoDisk
+if %QUEST_KAV%==Cd GOTO QuestCopyKAVtoDisk
+if %QUEST_KAV%==CD GOTO QuestCopyKAVtoDisk
+
+if %QUEST_KAV%==n GOTO QuestStartProg
+if %QUEST_KAV%==N GOTO QuestStartProg
+
+if %QUEST_KAV%==x GOTO Quit
+if %QUEST_KAV%==X GOTO Quit
+
+echo.
+:QuestCopyKAVtoFlash
+cls
+set QUEST_COPY_KAV_FLASH=NUL
+echo.
+echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
+echo.
+echo ---------------------------
+echo Скопировать базы на флешку?
+echo ---------------------------
+echo.
+echo Введите:
+echo.
+echo [ y ] Да
+echo [ n ] Назад
+echo.
+echo ------------------------
+echo [ x ] Выйти из программы
+echo.
+set /p QUEST_COPY_KAV_FLASH=">"
+if %QUEST_COPY_KAV_FLASH%==y GOTO CopyKAVtoFlash
+if %QUEST_COPY_KAV_FLASH%==Y GOTO CopyKAVtoFlash
+if %QUEST_COPY_KAV_FLASH%==n GOTO QuestKAV
+if %QUEST_COPY_KAV_FLASH%==N GOTO QuestKAV
+if %QUEST_COPY_KAV_FLASH%==x GOTO Quit
+if %QUEST_COPY_KAV_FLASH%==X GOTO Quit
+echo.
+
+:CopyKAVtoFlash
+if not exist "%KAV_TARGET_DIR_FLASH%\*" GOTO ErrNoFileCopyKAVtoFlash ::Проверка наличия файлов
+cls
+rd %KAV_TARGET_DIR_FLASH% /s /q
+if not exist %KAV_TARGET_DIR_FLASH% (md %KAV_TARGET_DIR_FLASH%)
+xcopy %KAV_INIT_DIR_DISK% %KAV_TARGET_DIR_FLASH% /e
+echo.
+pause
+GOTO QuestStartProg
+
+echo.
+:QuestCopyKAVtoDisk
+cls
+set QUEST_COPY_KAV_DISK=NUL
 echo.
 echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
 echo.
@@ -87,20 +164,20 @@ echo.
 echo ------------------------
 echo [ x ] Выйти из программы
 echo.
-set /p QUEST_COPY_KAV=">"
-if %QUEST_COPY_KAV%==y GOTO CopyKAV
-if %QUEST_COPY_KAV%==Y GOTO CopyKAV
-if %QUEST_COPY_KAV%==n GOTO QuestStartProg
-if %QUEST_COPY_KAV%==N GOTO QuestStartProg
-if %QUEST_COPY_KAV%==x GOTO Quit
-if %QUEST_COPY_KAV%==X GOTO Quit
+set /p QUEST_COPY_KAV_DISK=">"
+if %QUEST_COPY_KAV_DISK%==y GOTO CopyKAVtoDisk
+if %QUEST_COPY_KAV_DISK%==Y GOTO CopyKAVtoDisk
+if %QUEST_COPY_KAV_DISK%==n GOTO QuestKAV
+if %QUEST_COPY_KAV_DISK%==N GOTO QuestKAV
+if %QUEST_COPY_KAV_DISK%==x GOTO Quit
+if %QUEST_COPY_KAV_DISK%==X GOTO Quit
 echo.
-:CopyKAV
-if not exist "%KAV_INIT_DIR%\*" GOTO ErrNoFileCopyKAV ::Проверка наличия файлов
+:CopyKAVtoDisk
+if not exist "%KAV_INIT_DIR_FLASH%\*" GOTO ErrNoFileCopyKAVtoDisk ::Проверка наличия файлов
 cls
-rd %KAV_TARGET_DIR% /s /q
-if not exist %KAV_TARGET_DIR% (md %KAV_TARGET_DIR%)
-xcopy %KAV_INIT_DIR% %KAV_TARGET_DIR% /e
+rd %KAV_TARGET_DIR_DISK% /s /q
+if not exist %KAV_TARGET_DIR_DISK% (md %KAV_TARGET_DIR_DISK%)
+xcopy %KAV_INIT_DIR_FLASH% %KAV_TARGET_DIR_DISK% /e
 echo.
 pause
 GOTO QuestStartProg
@@ -281,11 +358,21 @@ GOTO QuestDWEB
 ::Блок работы с DWEB END
 
 ::Блок обработки ошибок START
-:ErrNoFileCopyKAV
+:ErrNoFileCopyKAVtoDisk
 echo.
 echo --------------------------------------------------------
 echo Файлы не найдены, проверьте наличие файлов в директории:
-echo %KAV_INIT_DIR%
+echo %KAV_INIT_DIR_FLASH%
+echo --------------------------------------------------------
+echo.
+pause
+GOTO QuestCopyKAV
+
+:ErrNoFileCopyKAVtoFlash
+echo.
+echo --------------------------------------------------------
+echo Файлы не найдены, проверьте наличие файлов в директории:
+echo %KAV_INIT_DIR_DISK%
 echo --------------------------------------------------------
 echo.
 pause

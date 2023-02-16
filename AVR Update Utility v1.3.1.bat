@@ -1,4 +1,4 @@
-::AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
+::AVR Update Utility v1.3.1, Script by Mikhail Brazhnik, 02/2023
 @ECHO OFF
 
 chcp 1251 > NUL
@@ -6,31 +6,33 @@ chcp 1251 > NUL
 ::Блок переменных START
 :: KAV
 set KAV_INIT_DIR_FLASH=E:\Updates
-set KAV_TARGET_DIR_DISK=C:\TEMP\KAVShare\Updates
-set KAV_INIT_DIR_DISK=C:\TEMP\Updates
 set KAV_TARGET_DIR_FLASH=E:\Updates
+set KAV_INIT_DIR_DISK=C:\TEMP\Updates
+set KAV_TARGET_DIR_DISK=C:\TEMP\KAVShare\Updates
 
 :: DWEB
-set DWEB_INIT_DIR=E:\DWEB_Repo
-set DWEB_TARGET_DIR=C:\TEMP\DWEB_Repo
-set DWEB_UTIL_DIR=C:\Program Files\DrWeb Server\bin\drwcsd.exe
+set DWEB_BASES_INIT_DIR_FLASH=E:\DWEB_Cumul
+set DWEB_BASES_TARGET_DIR_DISK=C:\TEMP\DWEB_Cumul
+set DWEB_BASES_TARGET_FILE_DISK=%DWEB_BASES_TARGET_DIR_DISK%\es1100_cumul_fstek2019dec.zip
+
+set DWEB_REPO_INIT_DIR_FLASH=E:\DWEB_Repo
+set DWEB_REPO_TARGET_DIR_DISK=C:\TEMP\DWEB_Repo
+set DWEB_REPO_TARGET_FILE_DISK=%DWEB_REPO_TARGET_DIR_DISK%\es1100_repository_fstek2019dec.zip
+
 set DWEB_BASES_URL=http://www2.portal.cbr.ru/avir_bases/drweb/11.00/es11_fstek2019dec/update/es1100_cumul_fstek2019dec.zip
 set DWEB_REPO_URL=http://www2.portal.cbr.ru/avir_bases/drweb/11.00/es11_fstek2019dec/update/es1100_repository_fstek2019dec.zip
-set DWEB_BASES_TARGET_DIR=C:\TEMP\DWEB_Cumul
-set DWEB_REPO_TARGET_DIR=C:\TEMP\DWEB_Repo
-set DWEB_BASES_TARGET_FILE=%DWEB_BASES_TARGET_DIR%\es1100_cumul_fstek2019dec.zip
-set DWEB_REPO_TARGET_FILE=%DWEB_REPO_TARGET_DIR%\es1100_repository_fstek2019dec.zip
+set DWEB_UTIL_WORK_FILE=C:\Program Files\DrWeb Server\bin\drwcsd.exe
 
 :: ZIP
 set WINRAR_WORK_FILE=C:\Program Files (x86)\WinRAR\WinRAR.exe
-set ZIP_ARCH_DIR=C:\DWEB_Cumul_%date%
+set DWEB_ZIP_BASES_DIR=C:\DWEB_Cumul_%date%
 ::Блок переменных END
 
 ::Блок старта программы START
 :QuestStartProg
 cls
 echo.
-echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.1, Script by Mikhail Brazhnik, 02/2023
 echo.
 set QUEST_START_PROG=NUL
 echo --------------------------------------------
@@ -75,7 +77,7 @@ echo.
 cls
 set QUEST_KAV=NUL
 echo.
-echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.1, Script by Mikhail Brazhnik, 02/2023
 echo.
 echo ------------------
 echo Выберите операцию:
@@ -112,7 +114,7 @@ echo.
 cls
 set QUEST_COPY_KAV_FLASH=NUL
 echo.
-echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.1, Script by Mikhail Brazhnik, 02/2023
 echo.
 echo ---------------------------
 echo Скопировать базы на флешку?
@@ -136,7 +138,8 @@ if %QUEST_COPY_KAV_FLASH%==X GOTO Quit
 echo.
 
 :CopyKAVtoFlash
-if not exist "%KAV_TARGET_DIR_FLASH%\*" GOTO ErrNoFileCopyKAVtoFlash ::Проверка наличия файлов
+cls
+if not exist "%KAV_TARGET_DIR_FLASH%\*" GOTO ErrNoFileCopyKAVtoFlash
 cls
 rd %KAV_TARGET_DIR_FLASH% /s /q
 if not exist %KAV_TARGET_DIR_FLASH% (md %KAV_TARGET_DIR_FLASH%)
@@ -150,7 +153,7 @@ echo.
 cls
 set QUEST_COPY_KAV_DISK=NUL
 echo.
-echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.1, Script by Mikhail Brazhnik, 02/2023
 echo.
 echo -----------------------------------------------
 echo Cкопировать базы с флешки в рабочую директорию?
@@ -173,7 +176,8 @@ if %QUEST_COPY_KAV_DISK%==x GOTO Quit
 if %QUEST_COPY_KAV_DISK%==X GOTO Quit
 echo.
 :CopyKAVtoDisk
-if not exist "%KAV_INIT_DIR_FLASH%\*" GOTO ErrNoFileCopyKAVtoDisk ::Проверка наличия файлов
+cls
+if not exist "%KAV_INIT_DIR_FLASH%\*" GOTO ErrNoFileCopyKAVtoDisk
 cls
 rd %KAV_TARGET_DIR_DISK% /s /q
 if not exist %KAV_TARGET_DIR_DISK% (md %KAV_TARGET_DIR_DISK%)
@@ -189,7 +193,7 @@ echo.
 cls
 set QUEST_DWEB=NUL
 echo.
-echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.1, Script by Mikhail Brazhnik, 02/2023
 echo.
 echo ------------------
 echo Выберите операцию:
@@ -198,7 +202,7 @@ echo.
 echo Работа с антивирусными базами Dr.Web:
 echo.
 echo [ lb ] Скачать антивирусные базы Dr.Web
-echo [ ub ] Разархивировать скаченные антивирусные базы Dr.Web и удалить файл архива
+echo [ ub ] Разархивировать скаченные базы Dr.Web и удалить файл архива
 echo [ cb ] Копировать антивирусные базы Dr.Web с флешки в директорию–источник
 echo.
 echo Работа с репозиторием Dr.Web:
@@ -257,14 +261,15 @@ GOTO QuestDWEB
 
 :DownloadDWEBBases
 cls
-if exist %DWEB_BASES_TARGET_DIR% (rd %DWEB_BASES_TARGET_DIR% /s /q)
-if not exist %DWEB_BASES_TARGET_DIR% (md %DWEB_BASES_TARGET_DIR%)
+if exist %DWEB_BASES_TARGET_DIR_DISK% (rd %DWEB_BASES_TARGET_DIR_DISK% /s /q)
+if not exist %DWEB_BASES_TARGET_DIR_DISK% (md %DWEB_BASES_TARGET_DIR_DISK%)
 echo.
 echo -------------------------------------------
 echo Начинается скачивание, пожалуйста, ждите...
 echo -------------------------------------------
 echo.
-curl -o "%DWEB_BASES_TARGET_FILE%" "%DWEB_BASES_URL%"
+curl -o "%DWEB_BASES_TARGET_FILE_DISK%" "%DWEB_BASES_URL%"
+if ERRORLEVEL 1 GOTO ErrNoCurlDWEB
 echo.
 pause
 GOTO QuestUnzipDWEBBases
@@ -304,54 +309,70 @@ echo --------------------------------------------------
 echo Начинается распаковка архива, пожалуйста, ждите...
 echo --------------------------------------------------
 echo.
-"%WINRAR_WORK_FILE%" x %DWEB_BASES_TARGET_FILE% %DWEB_BASES_TARGET_DIR%
-rem "%WINRAR_WORK_FILE%" x -ibck %DWEB_BASES_TARGET_FILE% %DWEB_BASES_TARGET_DIR%
-rem Ключь -ibck перемещает окно прогресса в трей
-if not exist %ZIP_ARCH_DIR% (md %ZIP_ARCH_DIR%)
+"%WINRAR_WORK_FILE%" x %DWEB_BASES_TARGET_FILE_DISK% %DWEB_BASES_TARGET_DIR_DISK%
+:: "%WINRAR_WORK_FILE%" x -ibck %DWEB_BASES_TARGET_FILE_DISK% %DWEB_BASES_TARGET_DIR_DISK%
+:: Ключь -ibck перемещает окно прогресса в трей
+if not exist %DWEB_ZIP_BASES_DIR% (md %DWEB_ZIP_BASES_DIR%)
+move /y %DWEB_BASES_TARGET_FILE_DISK% %DWEB_ZIP_BASES_DIR%
 echo.
-move /y %DWEB_BASES_TARGET_FILE% %ZIP_ARCH_DIR%\
+pause
+GOTO QuestDWEB
+
+:CopyBasesDWEB
+cls
+if not exist "%DWEB_BASES_INIT_DIR_FLASH%" GOTO ErrNoDirOnFlashDWEB
+echo.
+echo ------------------------------------------------
+echo Начинается копирование баз, пожалуйста, ждите...
+echo ------------------------------------------------
+echo.
+rd %DWEB_BASES_TARGET_DIR_DISK% /s /q
+if not exist %DWEB_REPO_TARGET_DIR_DISK% (md %DWEB_REPO_TARGET_DIR_DISK%)
+xcopy %DWEB_REPO_INIT_DIR_FLASH% %DWEB_REPO_TARGET_DIR_DISK% /e
+echo.
 pause
 GOTO QuestDWEB
 
 :DownloadDWEBRepo
 cls
-if exist %DWEB_REPO_TARGET_DIR% (rd %DWEB_REPO_TARGET_DIR% /s /q)
-if not exist %DWEB_REPO_TARGET_DIR% (md %DWEB_REPO_TARGET_DIR%)
+if exist %DWEB_REPO_TARGET_DIR_DISK% (rd %DWEB_REPO_TARGET_DIR_DISK% /s /q)
+if not exist %DWEB_REPO_TARGET_DIR_DISK% (md %DWEB_REPO_TARGET_DIR_DISK%)
 echo.
 echo -------------------------------------------
 echo Начинается скачивание, пожалуйста, ждите...
 echo -------------------------------------------
 echo.
-curl -o "%DWEB_REPO_TARGET_FILE%" "%DWEB_REPO_URL%"
+curl -o "%DWEB_REPO_TARGET_FILE_DISK%" "%DWEB_REPO_URL%"
+if ERRORLEVEL 1 GOTO ErrNoCurlDWEB
 echo.
 pause
 GOTO QuestDWEB
 
 :CopyRepoDWEB
 cls
-if not exist "%DWEB_INIT_DIR%\*repository*.zip" GOTO ErrNoFileCopyDWEB ::Проверка наличия файлов
+if not exist "%DWEB_REPO_INIT_DIR_FLASH%\*repository*.zip" GOTO ErrNoFileCopyDWEB
 echo.
 echo --------------------------------------------------------
 echo Начинается копирование репозитория, пожалуйста, ждите...
 echo --------------------------------------------------------
 echo.
-rd %DWEB_TARGET_DIR% /s /q
-if not exist %DWEB_TARGET_DIR% (md %DWEB_TARGET_DIR%)
-xcopy %DWEB_INIT_DIR%\*repository*.zip %DWEB_TARGET_DIR% /e
+rd %DWEB_REPO_TARGET_DIR_DISK% /s /q
+if not exist %DWEB_REPO_TARGET_DIR_DISK% (md %DWEB_REPO_TARGET_DIR_DISK%)
+xcopy %DWEB_REPO_INIT_DIR_FLASH%\*repository*.zip %DWEB_REPO_TARGET_DIR_DISK% /e
 echo.
 pause
 GOTO QuestDWEB
 
 :RestoreDWEB
 cls
-if not exist "%DWEB_TARGET_DIR%\*repository*.zip" GOTO ErrNoFileRestoreDWEB ::Проверка наличия файлов
-if not exist "%DWEB_UTIL_DIR%" GOTO ErrNoUtilFileDWEB ::Проверка наличия файлов
+if not exist "%DWEB_REPO_TARGET_DIR_DISK%\*repository*.zip" GOTO ErrNoFileRestoreDWEB
+if not exist "%DWEB_UTIL_WORK_FILE%" GOTO ErrNoUtilFileDWEB
 echo.
 echo -----------------------------------------------------------
 echo Начинается восстановление репозитория, пожалуйста, ждите...
 echo -----------------------------------------------------------
 echo.
-"%DWEB_UTIL_DIR%" restorerepo "%DWEB_TARGET_DIR%\es1100_repository_fstek2019dec.zip"
+"%DWEB_UTIL_WORK_FILE%" restorerepo "%DWEB_REPO_TARGET_DIR_DISK%\es1100_repository_fstek2019dec.zip"
 echo.
 pause
 GOTO QuestDWEB
@@ -366,7 +387,7 @@ echo %KAV_INIT_DIR_FLASH%
 echo --------------------------------------------------------
 echo.
 pause
-GOTO QuestCopyKAV
+GOTO QuestKAV
 
 :ErrNoFileCopyKAVtoFlash
 echo.
@@ -376,13 +397,32 @@ echo %KAV_INIT_DIR_DISK%
 echo --------------------------------------------------------
 echo.
 pause
-GOTO QuestCopyKAV
+GOTO QuestKAV
+
+:ErrNoCurlDWEB
+echo.
+echo -----------------------------------------------
+echo Ошибка скачивания. Обратитесь к администратору.
+echo -----------------------------------------------
+echo.
+pause
+GOTO QuestDWEB
+
+:ErrNoDirOnFlashDWEB
+echo.
+echo --------------------------------------------------------
+echo Каталог не найден, проверьте наличие каталога на флешке:
+echo %DWEB_BASES_INIT_DIR_FLASH%
+echo --------------------------------------------------------
+echo.
+pause
+GOTO QuestDWEB
 
 :ErrNoFileCopyDWEB
 echo.
 echo --------------------------------------------------------
 echo Файлы не найдены, проверьте наличие файлов в директории:
-echo %DWEB_INIT_DIR%
+echo %DWEB_REPO_INIT_DIR_FLASH%
 echo --------------------------------------------------------
 echo.
 pause
@@ -392,7 +432,7 @@ GOTO QuestDWEB
 echo.
 echo --------------------------------------------------------
 echo Файлы не найдены, проверьте наличие файлов в директории:
-echo %DWEB_TARGET_DIR%
+echo %DWEB_REPO_TARGET_DIR_DISK%
 echo --------------------------------------------------------
 echo.
 pause
@@ -402,7 +442,7 @@ GOTO QuestDWEB
 echo.
 echo ------------------------------------------------------------------------------------------
 echo Утилита для восстановления репозитория не найдена, проверьте ее наличие или измените путь:
-echo %DWEB_UTIL_DIR%
+echo %DWEB_UTIL_WORK_FILE%
 echo ------------------------------------------------------------------------------------------
 echo.
 pause
@@ -413,7 +453,7 @@ GOTO QuestDWEB
 :Quit
 cls
 echo.
-echo AVR Update Utility v1.2.0, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.1, Script by Mikhail Brazhnik, 02/2023
 echo.
 echo ------------------------------------------------------
 echo Программа завершена. Для выхода нажмите любую клавишу.

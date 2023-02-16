@@ -5,19 +5,20 @@ chcp 1251 > NUL
 
 ::Блок переменных START
 :: KAV
-set KAV_INIT_DIR_FLASH=E:\Updates
-set KAV_TARGET_DIR_FLASH=E:\Updates
+set KAV_INIT_DIR_FLASH=H:\Updates
+set KAV_TARGET_DIR_FLASH=H:\Updates
 set KAV_INIT_DIR_DISK=C:\TEMP\Updates
 set KAV_TARGET_DIR_DISK=C:\TEMP\KAVShare\Updates
 
 :: DWEB
-set DWEB_BASES_INIT_DIR_FLASH=E:\DWEB_Cumul
-set DWEB_BASES_TARGET_DIR_DISK=C:\TEMP\DWEB_Cumul
-set DWEB_BASES_TARGET_FILE_DISK=%DWEB_BASES_TARGET_DIR_DISK%\es1100_cumul_fstek2019dec.zip
+set DWEB_BASES_INIT_DIR_FLASH=H:\DWEB_Cumul
+set DWEB_BASES_TARGET_DIR_DISK=C:\TEMP\DWEBShare\DWEB_Cumul
+set DWEB_BASES_DOWNLOAD_DIR=H:\DWEB_Cumul
+set DWEB_BASES_DOWNLOAD_FILE=%DWEB_BASES_DOWNLOAD_DIR%\es1100_cumul_fstek2019dec.zip
 
-set DWEB_REPO_INIT_DIR_FLASH=E:\DWEB_Repo
-set DWEB_REPO_TARGET_DIR_DISK=C:\TEMP\DWEB_Repo
-set DWEB_REPO_TARGET_FILE_DISK=%DWEB_REPO_TARGET_DIR_DISK%\es1100_repository_fstek2019dec.zip
+set DWEB_REPO_INIT_DIR_FLASH=H:\DWEB_Repo
+set DWEB_REPO_DOWNLOAD_DIR=C:\TEMP\DWEBShare\DWEB_Repo
+set DWEB_REPO_DOWNLOAD_FILE=%DWEB_REPO_DOWNLOAD_DIR%\es1100_repository_fstek2019dec.zip
 
 set DWEB_BASES_URL=http://www2.portal.cbr.ru/avir_bases/drweb/11.00/es11_fstek2019dec/update/es1100_cumul_fstek2019dec.zip
 set DWEB_REPO_URL=http://www2.portal.cbr.ru/avir_bases/drweb/11.00/es11_fstek2019dec/update/es1100_repository_fstek2019dec.zip
@@ -25,7 +26,7 @@ set DWEB_UTIL_WORK_FILE=C:\Program Files\DrWeb Server\bin\drwcsd.exe
 
 :: ZIP
 set WINRAR_WORK_FILE=C:\Program Files (x86)\WinRAR\WinRAR.exe
-set DWEB_ZIP_BASES_DIR=C:\DWEB_Cumul_%date%
+set DWEB_ZIPFILES_ARCH_DIR=C:\TEMP\DWEB_Cumul_Arch\DWEB_Cumul_%date%
 ::Блок переменных END
 
 ::Блок старта программы START
@@ -139,11 +140,11 @@ echo.
 
 :CopyKAVtoFlash
 cls
-if not exist "%KAV_TARGET_DIR_FLASH%\*" GOTO ErrNoFileCopyKAVtoFlash
+if not exist "%KAV_INIT_DIR_DISK%\*" GOTO ErrNoFileCopyKAVtoFlash
 cls
-rd %KAV_TARGET_DIR_FLASH% /s /q
+::rd %KAV_TARGET_DIR_FLASH% /s /q Удаление каталога
 if not exist %KAV_TARGET_DIR_FLASH% (md %KAV_TARGET_DIR_FLASH%)
-xcopy %KAV_INIT_DIR_DISK% %KAV_TARGET_DIR_FLASH% /e
+xcopy %KAV_INIT_DIR_DISK% %KAV_TARGET_DIR_FLASH% /e /y
 echo.
 pause
 GOTO QuestStartProg
@@ -179,9 +180,9 @@ echo.
 cls
 if not exist "%KAV_INIT_DIR_FLASH%\*" GOTO ErrNoFileCopyKAVtoDisk
 cls
-rd %KAV_TARGET_DIR_DISK% /s /q
+::rd %KAV_TARGET_DIR_DISK% /s /q Удаление каталога
 if not exist %KAV_TARGET_DIR_DISK% (md %KAV_TARGET_DIR_DISK%)
-xcopy %KAV_INIT_DIR_FLASH% %KAV_TARGET_DIR_DISK% /e
+xcopy %KAV_INIT_DIR_FLASH% %KAV_TARGET_DIR_DISK% /e /y
 echo.
 pause
 GOTO QuestStartProg
@@ -261,14 +262,14 @@ GOTO QuestDWEB
 
 :DownloadDWEBBases
 cls
-if exist %DWEB_BASES_TARGET_DIR_DISK% (rd %DWEB_BASES_TARGET_DIR_DISK% /s /q)
-if not exist %DWEB_BASES_TARGET_DIR_DISK% (md %DWEB_BASES_TARGET_DIR_DISK%)
+if exist %DWEB_BASES_DOWNLOAD_DIR% (rd %DWEB_BASES_DOWNLOAD_DIR% /s /q)
+if not exist %DWEB_BASES_DOWNLOAD_DIR% (md %DWEB_BASES_DOWNLOAD_DIR%)
 echo.
 echo -------------------------------------------
 echo Начинается скачивание, пожалуйста, ждите...
 echo -------------------------------------------
 echo.
-curl -o "%DWEB_BASES_TARGET_FILE_DISK%" "%DWEB_BASES_URL%"
+curl -o "%DWEB_BASES_DOWNLOAD_FILE%" "%DWEB_BASES_URL%"
 if ERRORLEVEL 1 GOTO ErrNoCurlDWEB
 echo.
 pause
@@ -302,18 +303,18 @@ if %QUEST_UNZIP_DWEB_BASES%==X GOTO Quit
 
 GOTO UnzipDWEBBases
 
-:UnzipDWEBBases
+#:UnzipDWEBBases
 cls
 echo.
 echo --------------------------------------------------
 echo Начинается распаковка архива, пожалуйста, ждите...
 echo --------------------------------------------------
 echo.
-"%WINRAR_WORK_FILE%" x %DWEB_BASES_TARGET_FILE_DISK% %DWEB_BASES_TARGET_DIR_DISK%
-:: "%WINRAR_WORK_FILE%" x -ibck %DWEB_BASES_TARGET_FILE_DISK% %DWEB_BASES_TARGET_DIR_DISK%
-:: Ключь -ibck перемещает окно прогресса в трей
-if not exist %DWEB_ZIP_BASES_DIR% (md %DWEB_ZIP_BASES_DIR%)
-move /y %DWEB_BASES_TARGET_FILE_DISK% %DWEB_ZIP_BASES_DIR%
+"%WINRAR_WORK_FILE%" x %DWEB_BASES_DOWNLOAD_FILE% %DWEB_BASES_TARGET_DIR_DISK%
+::"%WINRAR_WORK_FILE%" x -ibck %DWEB_BASES_DOWNLOAD_FILE% %DWEB_BASES_TARGET_DIR_DISK%
+::Ключь -ibck перемещает окно прогресса в трей
+if not exist %DWEB_ZIPFILES_ARCH_DIR% (md %DWEB_ZIPFILES_ARCH_DIR%)
+move /y %DWEB_BASES_DOWNLOAD_FILE% %DWEB_ZIPFILES_ARCH_DIR%
 echo.
 pause
 GOTO QuestDWEB
@@ -335,14 +336,14 @@ GOTO QuestDWEB
 
 :DownloadDWEBRepo
 cls
-if exist %DWEB_REPO_TARGET_DIR_DISK% (rd %DWEB_REPO_TARGET_DIR_DISK% /s /q)
-if not exist %DWEB_REPO_TARGET_DIR_DISK% (md %DWEB_REPO_TARGET_DIR_DISK%)
+if exist %DWEB_REPO_DOWNLOAD_DIR% (rd %DWEB_REPO_DOWNLOAD_DIR% /s /q)
+if not exist %DWEB_REPO_DOWNLOAD_DIR% (md %DWEB_REPO_DOWNLOAD_DIR%)
 echo.
 echo -------------------------------------------
 echo Начинается скачивание, пожалуйста, ждите...
 echo -------------------------------------------
 echo.
-curl -o "%DWEB_REPO_TARGET_FILE_DISK%" "%DWEB_REPO_URL%"
+curl -o "%DWEB_REPO_DOWNLOAD_DIR%" "%DWEB_REPO_URL%"
 if ERRORLEVEL 1 GOTO ErrNoCurlDWEB
 echo.
 pause

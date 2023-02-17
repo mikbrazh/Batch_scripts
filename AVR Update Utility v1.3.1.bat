@@ -5,19 +5,19 @@ chcp 1251 > NUL
 
 ::Блок переменных START
 :: KAV
-set KAV_INIT_DIR_FLASH=H:\Updates
-set KAV_TARGET_DIR_FLASH=H:\Updates
+set KAV_INIT_DIR_FLASH=E:\Updates
+set KAV_TARGET_DIR_FLASH=E:\Updates
 set KAV_INIT_DIR_DISK=C:\TEMP\Updates
 set KAV_TARGET_DIR_DISK=C:\TEMP\KAVShare\Updates
 
 :: DWEB
-set DWEB_BASES_INIT_DIR_FLASH=H:\DWEB_Cumul
-set DWEB_BASES_TARGET_DIR_DISK=C:\TEMP\DWEBShare\DWEB_Cumul
-set DWEB_BASES_DOWNLOAD_DIR=H:\DWEB_Cumul
+set DWEB_BASES_INIT_DIR_FLASH=E:\DWEB_Cumul
+set DWEB_BASES_SRC_SRV_DIR=C:\TEMP\DWEBShare\DWEB_Cumul
+set DWEB_BASES_DOWNLOAD_DIR=E:\DWEB_Cumul
 set DWEB_BASES_DOWNLOAD_FILE=%DWEB_BASES_DOWNLOAD_DIR%\es1100_cumul_fstek2019dec.zip
 
-set DWEB_REPO_INIT_DIR_FLASH=H:\DWEB_Repo
-set DWEB_REPO_DOWNLOAD_DIR=C:\TEMP\DWEBShare\DWEB_Repo
+rem set DWEB_REPO_INIT_DIR_FLASH=E:\DWEB_Repo
+set DWEB_REPO_DOWNLOAD_DIR=E:\DWEB_Repo
 set DWEB_REPO_DOWNLOAD_FILE=%DWEB_REPO_DOWNLOAD_DIR%\es1100_repository_fstek2019dec.zip
 
 set DWEB_BASES_URL=http://www2.portal.cbr.ru/avir_bases/drweb/11.00/es11_fstek2019dec/update/es1100_cumul_fstek2019dec.zip
@@ -25,8 +25,8 @@ set DWEB_REPO_URL=http://www2.portal.cbr.ru/avir_bases/drweb/11.00/es11_fstek201
 set DWEB_UTIL_WORK_FILE=C:\Program Files\DrWeb Server\bin\drwcsd.exe
 
 :: ZIP
-set WINRAR_WORK_FILE=C:\Program Files (x86)\WinRAR\WinRAR.exe
-set DWEB_ZIPFILES_ARCH_DIR=C:\TEMP\DWEB_Cumul_Arch\DWEB_Cumul_%date%
+set WINRAR_WORK_FILE=C:\Program Files\WinRAR\WinRAR.exe
+set DWEB_ZIPFILES_ARCH_DIR=E:\DWEB_Cumul_Arch\DWEB_Cumul_%date%
 ::Блок переменных END
 
 ::Блок старта программы START
@@ -87,7 +87,7 @@ echo.
 echo Введите:
 echo.
 echo [ cf ] Скопировать базы на флешку
-echo [ cd ] Cкопировать базы с флешки в рабочую директорию
+echo [ cd ] Cкопировать базы с флешки на диск (в директорию-источник)
 echo.
 echo ------------------------
 echo [ n ] Назад
@@ -204,12 +204,12 @@ echo Работа с антивирусными базами Dr.Web:
 echo.
 echo [ lb ] Скачать антивирусные базы Dr.Web
 echo [ ub ] Разархивировать скаченные базы Dr.Web и удалить файл архива
-echo [ cb ] Копировать антивирусные базы Dr.Web с флешки в директорию–источник
+echo [ cb ] Копировать антивирусные базы Dr.Web с флешки на диск (в директорию–источник)
 echo.
 echo Работа с репозиторием Dr.Web:
 echo.
 echo [ lr ] Скачать репозиторий Dr.Web
-echo [ cr ] Копировать репозиторий Dr.Web с флешки в директорию–источник
+echo [ cr ] Копировать репозиторий Dr.Web с флешки на диск (в директорию–источник)
 echo [ re ] Восстановить репозиторий из директории–источника на сервере Dr.Web
 echo.
 echo -------------------------
@@ -303,15 +303,15 @@ if %QUEST_UNZIP_DWEB_BASES%==X GOTO Quit
 
 GOTO UnzipDWEBBases
 
-#:UnzipDWEBBases
+:UnzipDWEBBases
 cls
 echo.
 echo --------------------------------------------------
 echo Начинается распаковка архива, пожалуйста, ждите...
 echo --------------------------------------------------
 echo.
-"%WINRAR_WORK_FILE%" x %DWEB_BASES_DOWNLOAD_FILE% %DWEB_BASES_TARGET_DIR_DISK%
-::"%WINRAR_WORK_FILE%" x -ibck %DWEB_BASES_DOWNLOAD_FILE% %DWEB_BASES_TARGET_DIR_DISK%
+"%WINRAR_WORK_FILE%" x %DWEB_BASES_DOWNLOAD_FILE% %DWEB_BASES_DOWNLOAD_DIR%
+::"%WINRAR_WORK_FILE%" x -ibck %DWEB_BASES_DOWNLOAD_FILE% %DWEB_BASES_SRC_SRV_DIR%
 ::Ключь -ibck перемещает окно прогресса в трей
 if not exist %DWEB_ZIPFILES_ARCH_DIR% (md %DWEB_ZIPFILES_ARCH_DIR%)
 move /y %DWEB_BASES_DOWNLOAD_FILE% %DWEB_ZIPFILES_ARCH_DIR%
@@ -327,9 +327,9 @@ echo ------------------------------------------------
 echo Начинается копирование баз, пожалуйста, ждите...
 echo ------------------------------------------------
 echo.
-rd %DWEB_BASES_TARGET_DIR_DISK% /s /q
-if not exist %DWEB_REPO_TARGET_DIR_DISK% (md %DWEB_REPO_TARGET_DIR_DISK%)
-xcopy %DWEB_REPO_INIT_DIR_FLASH% %DWEB_REPO_TARGET_DIR_DISK% /e
+::rd %DWEB_BASES_SRC_SRV_DIR% /s /q
+if not exist %DWEB_BASES_SRC_SRV_DIR% (md %DWEB_BASES_SRC_SRV_DIR%)
+xcopy %DWEB_BASES_DOWNLOAD_DIR% %DWEB_BASES_SRC_SRV_DIR% /e /y
 echo.
 pause
 GOTO QuestDWEB
@@ -343,7 +343,7 @@ echo -------------------------------------------
 echo Начинается скачивание, пожалуйста, ждите...
 echo -------------------------------------------
 echo.
-curl -o "%DWEB_REPO_DOWNLOAD_DIR%" "%DWEB_REPO_URL%"
+curl -o "%DWEB_REPO_DOWNLOAD_FILE%" "%DWEB_REPO_URL%"
 if ERRORLEVEL 1 GOTO ErrNoCurlDWEB
 echo.
 pause
@@ -351,7 +351,7 @@ GOTO QuestDWEB
 
 :CopyRepoDWEB
 cls
-if not exist "%DWEB_REPO_INIT_DIR_FLASH%\*repository*.zip" GOTO ErrNoFileCopyDWEB
+if not exist "%DWEB_REPO_DOWNLOAD_DIR%\*repository*.zip" GOTO ErrNoFileCopyDWEB
 echo.
 echo --------------------------------------------------------
 echo Начинается копирование репозитория, пожалуйста, ждите...
@@ -423,7 +423,7 @@ GOTO QuestDWEB
 echo.
 echo --------------------------------------------------------
 echo Файлы не найдены, проверьте наличие файлов в директории:
-echo %DWEB_REPO_INIT_DIR_FLASH%
+echo %DWEB_REPO_DOWNLOAD_DIR%
 echo --------------------------------------------------------
 echo.
 pause

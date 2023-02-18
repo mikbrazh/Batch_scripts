@@ -1,16 +1,17 @@
-::AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023
+::AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023 (TSNR Region build)
 @ECHO OFF
 
 chcp 1251 > NUL
 
-::Блокировка функций START
-::cls
-::echo ----------------------------------------------------------
-::echo Данная функция заблокирована. Обратитесь к администратору.
-::echo ----------------------------------------------------------
-::pause
-::GOTO #
-::Блокировка функций END
+rem Блокировка функций START
+rem cls
+rem echo ----------------------------------------------------------
+rem echo Данная функция заблокирована. Обратитесь к администратору.
+rem echo ----------------------------------------------------------
+rem echo.
+rem pause
+rem GOTO #
+rem Блокировка функций END
 
 ::Блок переменных START
 ::KAV
@@ -43,7 +44,7 @@ set DWEB_ZIPFILES_ARCH_DIR=E:\TEMP\FD\DWEB_Cumul_Arch\DWEB_Cumul_%date%
 :QuestStartProg
 cls
 echo.
-echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023 (TSNR Region build)
 echo.
 set QUEST_START_PROG=NUL
 echo --------------------------------------------
@@ -84,10 +85,21 @@ GOTO QuestStartProg
 
 ::Блок работы с KAV START
 :QuestKAV
+
+rem Блокировка функций START
+cls
+echo ----------------------------------------------------------
+echo Данная функция заблокирована. Обратитесь к администратору.
+echo ----------------------------------------------------------
+echo.
+pause
+GOTO QuestStartProg
+rem Блокировка функций END
+
 cls
 set QUEST_KAV=NUL
 echo.
-echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023 (TSNR Region build)
 echo.
 echo ------------------
 echo Выберите операцию:
@@ -130,7 +142,7 @@ GOTO QuestKAV
 cls
 set QUEST_COPY_KAV_FLASH=NUL
 echo.
-echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023 (TSNR Region build)
 echo.
 echo ---------------------------
 echo Скопировать базы на флешку?
@@ -169,7 +181,7 @@ echo.
 cls
 set QUEST_COPY_KAV_DISK=NUL
 echo.
-echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023 (TSNR Region build)
 echo.
 echo -----------------------------------------------
 echo Cкопировать базы с флешки в рабочую директорию?
@@ -209,7 +221,7 @@ echo.
 cls
 set QUEST_DWEB=NUL
 echo.
-echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023 (TSNR Region build)
 echo.
 echo ------------------
 echo Выберите операцию:
@@ -219,14 +231,14 @@ echo Работа с антивирусными базами Dr.Web:
 echo.
 echo [ lb ] Скачать антивирусные базы Dr.Web
 echo [ ub ] Разархивировать скаченные базы Dr.Web и удалить файл архива
-echo [ cb ] Копировать антивирусные базы Dr.Web с флешки на диск (в директорию–источник)
+rem echo [ cb ] Копировать антивирусные базы Dr.Web с флешки на диск (в директорию–источник)
 echo.
-echo Работа с репозиторием Dr.Web:
-echo.
-echo [ lr ] Скачать репозиторий Dr.Web
-echo [ cr ] Копировать репозиторий Dr.Web с флешки на диск (в директорию–источник)
-echo [ re ] Восстановить репозиторий из директории–источника на сервере Dr.Web
-echo.
+rem echo Работа с репозиторием Dr.Web:
+rem echo.
+rem echo [ lr ] Скачать репозиторий Dr.Web
+rem echo [ cr ] Копировать репозиторий Dr.Web с флешки на диск (в директорию–источник)
+rem echo [ re ] Восстановить репозиторий из директории–источника на сервере Dr.Web
+rem echo.
 echo -------------------------
 echo [ n ]  Назад
 echo [ x ]  Выйти из программы
@@ -242,25 +254,25 @@ if %QUEST_DWEB%==Ub GOTO QuestUnzipDWEBBases
 if %QUEST_DWEB%==uB GOTO QuestUnzipDWEBBases
 if %QUEST_DWEB%==UB GOTO QuestUnzipDWEBBases
 
-if %QUEST_DWEB%==lr GOTO DownloadDWEBRepo
-if %QUEST_DWEB%==Lr GOTO DownloadDWEBRepo
-if %QUEST_DWEB%==lR GOTO DownloadDWEBRepo
-if %QUEST_DWEB%==LR GOTO DownloadDWEBRepo
+rem if %QUEST_DWEB%==lr GOTO DownloadDWEBRepo
+rem if %QUEST_DWEB%==Lr GOTO DownloadDWEBRepo
+rem if %QUEST_DWEB%==lR GOTO DownloadDWEBRepo
+rem if %QUEST_DWEB%==LR GOTO DownloadDWEBRepo
 
-if %QUEST_DWEB%==cb GOTO CopyBasesDWEB
-if %QUEST_DWEB%==Cb GOTO CopyBasesDWEB
-if %QUEST_DWEB%==cB GOTO CopyBasesDWEB
-if %QUEST_DWEB%==CB GOTO CopyBasesDWEB
+rem if %QUEST_DWEB%==cb GOTO CopyBasesDWEB
+rem if %QUEST_DWEB%==Cb GOTO CopyBasesDWEB
+rem if %QUEST_DWEB%==cB GOTO CopyBasesDWEB
+rem if %QUEST_DWEB%==CB GOTO CopyBasesDWEB
 
-if %QUEST_DWEB%==cr GOTO CopyRepoDWEB
-if %QUEST_DWEB%==Cr GOTO CopyRepoDWEB
-if %QUEST_DWEB%==cR GOTO CopyRepoDWEB
-if %QUEST_DWEB%==CR GOTO CopyRepoDWEB
+rem if %QUEST_DWEB%==cr GOTO CopyRepoDWEB
+rem if %QUEST_DWEB%==Cr GOTO CopyRepoDWEB
+rem if %QUEST_DWEB%==cR GOTO CopyRepoDWEB
+rem if %QUEST_DWEB%==CR GOTO CopyRepoDWEB
 
-if %QUEST_DWEB%==re GOTO RestoreDWEB
-if %QUEST_DWEB%==Re GOTO RestoreDWEB
-if %QUEST_DWEB%==rE GOTO RestoreDWEB
-if %QUEST_DWEB%==RE GOTO RestoreDWEB
+rem if %QUEST_DWEB%==re GOTO RestoreDWEB
+rem if %QUEST_DWEB%==Re GOTO RestoreDWEB
+rem if %QUEST_DWEB%==rE GOTO RestoreDWEB
+rem if %QUEST_DWEB%==RE GOTO RestoreDWEB
 
 if %QUEST_DWEB%==n GOTO QuestStartProg
 if %QUEST_DWEB%==N GOTO QuestStartProg
@@ -470,7 +482,7 @@ GOTO QuestDWEB
 :Quit
 cls
 echo.
-echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023
+echo AVR Update Utility v1.3.2, Script by Mikhail Brazhnik, 02/2023 (TSNR Region build)
 echo.
 echo ------------------------------------------------------
 echo Программа завершена. Для выхода нажмите любую клавишу.

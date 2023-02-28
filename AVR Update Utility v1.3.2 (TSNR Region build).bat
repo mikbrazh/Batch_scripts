@@ -15,8 +15,8 @@ rem Блокировка функций END
 
 ::Блок переменных START
 ::KAV
-set KAV_BASES_DOWNLOAD_DIR=E:\TEMP\FD\KAV_Updates
-set KAV_BASES_CLI_SRC_DIR=E:\TEMP\CLI\Updates
+set KAV_BASES_DOWNLOAD_DIR=E:\TEMP\FD\Updates
+set KAV_BASES_CLI_SRC_DIR=\\S40mkav02\_antivirus\Updates
 set KAV_BASES_SRV_DIST_DIR=E:\TEMP\SRV\KAVShare\Updates
 
 ::DWEB
@@ -87,13 +87,13 @@ GOTO QuestStartProg
 :QuestKAV
 
 rem Блокировка функций START
-cls
-echo ----------------------------------------------------------
-echo Данная функция заблокирована. Обратитесь к администратору.
-echo ----------------------------------------------------------
-echo.
-pause
-GOTO QuestStartProg
+rem cls
+rem echo ----------------------------------------------------------
+rem echo Данная функция заблокирована. Обратитесь к администратору.
+rem echo ----------------------------------------------------------
+rem echo.
+rem pause
+rem GOTO QuestStartProg
 rem Блокировка функций END
 
 cls
@@ -107,8 +107,8 @@ echo ------------------
 echo.
 echo Введите:
 echo.
-echo [ cf ] Скопировать базы на флешку
-echo [ cd ] Cкопировать антивирусные базы KAV с флешки на диск (в директорию-источник)
+echo [ cf ] Скопировать антивирусные базы KAV на флешку
+rem echo [ cd ] Cкопировать антивирусные базы KAV с флешки на диск (в директорию-источник)
 echo.
 echo ------------------------
 echo [ n ] Назад
@@ -120,10 +120,10 @@ if %QUEST_KAV%==cF GOTO QuestCopyKAVtoFlash
 if %QUEST_KAV%==Cf GOTO QuestCopyKAVtoFlash
 if %QUEST_KAV%==CF GOTO QuestCopyKAVtoFlash
 
-if %QUEST_KAV%==cd GOTO QuestCopyKAVtoDisk
-if %QUEST_KAV%==cD GOTO QuestCopyKAVtoDisk
-if %QUEST_KAV%==Cd GOTO QuestCopyKAVtoDisk
-if %QUEST_KAV%==CD GOTO QuestCopyKAVtoDisk
+rem if %QUEST_KAV%==cd GOTO QuestCopyKAVtoDisk
+rem if %QUEST_KAV%==cD GOTO QuestCopyKAVtoDisk
+rem if %QUEST_KAV%==Cd GOTO QuestCopyKAVtoDisk
+rem if %QUEST_KAV%==CD GOTO QuestCopyKAVtoDisk
 
 if %QUEST_KAV%==n GOTO QuestStartProg
 if %QUEST_KAV%==N GOTO QuestStartProg
